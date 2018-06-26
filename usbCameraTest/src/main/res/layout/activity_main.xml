@@ -22,6 +22,7 @@
   ~  may have a different license, see the respective files.
   -->
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/container"
     android:layout_width="match_parent"
@@ -31,9 +32,9 @@
 
     <com.serenegiant.widget.SimpleUVCCameraTextureView
         android:id="@+id/UVCCameraTextureView1"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_gravity="center"
+        android:layout_width="329dp"
+        android:layout_height="184dp"
+        android:layout_gravity="end"
         android:background="#ff000000" />
 
     <ImageButton
@@ -43,5 +44,12 @@
         android:contentDescription="@string/camera"
         android:scaleType="centerCrop"
         android:src="@android:drawable/ic_menu_camera" />
+
+    <ImageView
+        android:id="@+id/imageView"
+        android:layout_width="327dp"
+        android:layout_height="234dp"
+        android:layout_gravity="bottom|right"
+        android:src="@mipmap/btn_shutter_default" />
 
 </FrameLayout>

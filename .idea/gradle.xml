@@ -5,7 +5,6 @@
       <GradleProjectSettings>
         <option name="distributionType" value="DEFAULT_WRAPPED" />
         <option name="externalProjectPath" value="$PROJECT_DIR$" />
-        <option name="gradleHome" value="$APPLICATION_HOME_DIR$/gradle/gradle-2.14.1" />
         <option name="modules">
           <set>
             <option value="$PROJECT_DIR$" />
@@ -20,6 +19,7 @@
             <option value="$PROJECT_DIR$/usbCameraTest6" />
             <option value="$PROJECT_DIR$/usbCameraTest7" />
             <option value="$PROJECT_DIR$/usbCameraTest8" />
+            <option value="$PROJECT_DIR$/uvccameraforunity" />
           </set>
         </option>
         <option name="resolveModulePerSourceSet" value="false" />

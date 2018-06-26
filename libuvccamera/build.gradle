@@ -26,9 +26,8 @@ import org.apache.tools.ant.taskdefs.condition.Os
 
 android {
 	compileSdkVersion versionCompiler
-	buildToolsVersion versionBuildTool
 
-	compileOptions {
+    compileOptions {
 		sourceCompatibility javaSourceCompatibility
 		targetCompatibility javaTargetCompatibility
 	}
@@ -50,6 +49,7 @@ android {
 			jni.srcDirs = []
 		}
 	}
+    buildToolsVersion '27.0.3'
 }
 
 tasks.withType(JavaCompile) {
