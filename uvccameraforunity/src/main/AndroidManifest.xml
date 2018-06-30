@@ -1,2 +1,6 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.ikeda.na0ki.uvccameraforunity" />
+    package="com.ikeda.na0ki.uvccameraforunity">
+    <permission android:name="android.hardware.usb.host" />
+    <uses-feature android:name="android.hardware.usb.host" />
+</manifest>
+
