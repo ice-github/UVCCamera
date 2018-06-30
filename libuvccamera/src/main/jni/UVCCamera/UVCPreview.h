@@ -54,6 +54,15 @@ typedef struct {
 } Fields_iframecallback;
 
 class UVCPreview {
+
+    unsigned int m_texture;
+    int m_width;
+    int m_height;
+    int m_alignment;
+    unsigned int m_format;
+    unsigned int m_pixeltype;
+    unsigned char* m_buffer;
+
 private:
 	uvc_device_handle_t *mDeviceHandle;
 	ANativeWindow *mPreviewWindow;
@@ -109,6 +118,8 @@ private:
 	void do_capture_idle_loop(JNIEnv *env);
 	void do_capture_callback(JNIEnv *env, uvc_frame_t *frame);
 	void callbackPixelFormatChanged();
+
+	void UpdateBuffer(uvc_frame_t *frame);
 public:
 	UVCPreview(uvc_device_handle_t *devh);
 	~UVCPreview();
@@ -121,6 +132,9 @@ public:
 	int stopPreview();
 	inline const bool isCapturing() const;
 	int setCaptureDisplay(ANativeWindow *capture_window);
+
+	void SetTexture(unsigned int texture, int width, int height, int alignment, unsigned int format, unsigned int pixeltype);
+	void UpdateTexture();
 };
 
 #endif /* UVCPREVIEW_H_ */

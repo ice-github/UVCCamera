@@ -1044,6 +1044,8 @@ public class UVCCamera {
     private static final native int nativeStopPreview(final long id_camera);
     private static final native int nativeSetPreviewDisplay(final long id_camera, final Surface surface);
     private static final native int nativeSetFrameCallback(final long mNativePtr, final IFrameCallback callback, final int pixelFormat);
+    private static final native int nativeSetPreviewTexture(final long id_camera, final int texture, final int width, final int height, final int alignment, final int format, final int pixeltype);
+	private static final native int nativeUpdatePreviewTexture(final long id_camera);
 
 //**********************************************************************
     /**
@@ -1221,4 +1223,21 @@ public class UVCCamera {
 	private final native int nativeUpdatePrivacyLimit(final long id_camera);
     private static final native int nativeSetPrivacy(final long id_camera, final boolean privacy);
     private static final native int nativeGetPrivacy(final long id_camera);
+	
+	public int setPreviewTexture(final int texture, final int width, final int height, final int alignment, final int format, final int pixeltype){
+		if (mNativePtr != 0) {
+			final int result = nativeSetPreviewTexture(mNativePtr, texture, width, height, alignment, format, pixeltype);
+			return result;
+		}
+		return 0;
+	}
+
+	public int updatePreviewTexture(){
+		if (mNativePtr != 0) {
+			final int result = nativeUpdatePreviewTexture(mNativePtr);
+			return result;
+		}
+		return 0;
+	}
+
 }

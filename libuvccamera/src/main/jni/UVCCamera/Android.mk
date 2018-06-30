@@ -47,6 +47,7 @@ LOCAL_CFLAGS += -O3 -fstrict-aliasing -fprefetch-loop-arrays
 LOCAL_LDLIBS := -L$(SYSROOT)/usr/lib -ldl
 LOCAL_LDLIBS += -llog
 LOCAL_LDLIBS += -landroid
+LOCAL_LDLIBS += -lGLESv1_CM -lGLESv2
 
 LOCAL_SHARED_LIBRARIES += usb100 uvc
 

@@ -1994,6 +1994,30 @@ static jint nativeGetPrivacy(JNIEnv *env, jobject thiz,
 	RETURN(result, jint);
 }
 
+static jint nativeSetPreviewTexture(JNIEnv *env, jobject thiz,
+	ID_TYPE id_camera, jint texture, jint width, jint height, jint alignment, jint format, jint pixeltype) {
+
+	jint result = JNI_ERR;
+	ENTER();
+	UVCCamera *camera = reinterpret_cast<UVCCamera *>(id_camera);
+	if (LIKELY(camera)) {
+		result = camera->SetPreviewTexture(texture, width, height, alignment, format, pixeltype);
+	}
+	RETURN(result, jint);
+}
+
+static jint nativeUpdatePreviewTexture(JNIEnv *env, jobject thiz,
+	ID_TYPE id_camera) {
+
+	jint result = JNI_ERR;
+	ENTER();
+	UVCCamera *camera = reinterpret_cast<UVCCamera *>(id_camera);
+	if (LIKELY(camera)) {
+		result = camera->UpdatePreviewTexture();
+	}
+	RETURN(result, jint);
+}
+
 //**********************************************************************
 //
 //**********************************************************************
@@ -2189,6 +2213,10 @@ static JNINativeMethod methods[] = {
 	{ "nativeUpdatePrivacyLimit",		"(J)I", (void *) nativeUpdatePrivacyLimit },
 	{ "nativeSetPrivacy",				"(JZ)I", (void *) nativeSetPrivacy },
 	{ "nativeGetPrivacy",				"(J)I", (void *) nativeGetPrivacy },
+
+	{ "nativeSetPreviewTexture",				"(JIIIIII)I", (void *) nativeSetPreviewTexture },
+	{ "nativeUpdatePreviewTexture",				"(J)I", (void *) nativeUpdatePreviewTexture },
+
 };
 
 int register_uvccamera(JNIEnv *env) {

@@ -67,7 +67,14 @@ UVCPreview::UVCPreview(uvc_device_handle_t *devh)
 	captureQueu(NULL),
 	mFrameCallbackObj(NULL),
 	mFrameCallbackFunc(NULL),
-	callbackPixelBytes(2) {
+	callbackPixelBytes(2),
+	m_texture(0),
+	m_width(0),
+	m_height(0),
+	m_alignment(0),
+	m_format(0),
+    m_pixeltype(0),
+    m_buffer(NULL){
 
 	ENTER();
 	pthread_cond_init(&preview_sync, NULL);
@@ -97,6 +104,7 @@ UVCPreview::~UVCPreview() {
 	pthread_mutex_destroy(&capture_mutex);
 	pthread_cond_destroy(&capture_sync);
 	pthread_mutex_destroy(&pool_mutex);
+	if(m_buffer != NULL) delete [] m_buffer;
 	EXIT();
 }
 
@@ -641,7 +649,8 @@ uvc_frame_t *UVCPreview::draw_preview_one(uvc_frame_t *frame, ANativeWindow **wi
 				b = convert_func(frame, converted);
 				if (!b) {
 					pthread_mutex_lock(&preview_mutex);
-					copyToSurface(converted, window);
+					//copyToSurface(converted, window);//サーフェス表示しないので不要
+    				UpdateBuffer(converted);//テクスチャ用のバッファ更新
 					pthread_mutex_unlock(&preview_mutex);
 				} else {
 					LOGE("failed converting");
@@ -873,4 +882,78 @@ void UVCPreview::do_capture_callback(JNIEnv *env, uvc_frame_t *frame) {
 		recycle_frame(callback_frame);
 	}
 	EXIT();
+}
+
+#include <GLES/gl.h>
+#include <GLES2/gl2.h>
+
+//Java側から呼ばれるテクスチャをセットする関数
+void UVCPreview::SetTexture(unsigned int texture, int width, int height, int alignment, unsigned int format, unsigned int pixeltype)
+{
+	ENTER();
+
+	if(m_texture == 0)
+	{
+        m_texture = texture;//Unity側で確保されたテクスチャIDを使用
+        m_width = width;
+        m_height = height;
+        m_alignment = alignment;
+        m_format = format;
+        m_pixeltype = pixeltype;
+
+        //4byte/pixel texture
+        m_buffer = new unsigned char[m_width * m_height * 4];
+        LOGW("UVCPreview::SetTexture() allocate buffer as 32bit pixel, %d bytes", (m_width * m_height * 4));
+    }else{
+        LOGW("UVCPreview::SetTexture() texture has already set: %d", m_texture);
+    }
+
+    EXIT();
+}
+
+//Java側から呼ばれるテクスチャ情報の更新の関数
+void UVCPreview::UpdateTexture()
+{
+	ENTER();
+
+    if (m_texture != 0)
+    {
+        pthread_mutex_lock(&preview_mutex);
+
+        glBindTexture(GL_TEXTURE_2D, m_texture);
+        glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+        glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+        glPixelStorei(GL_UNPACK_ALIGNMENT, m_alignment);
+        glTexSubImage2D
+        (
+            GL_TEXTURE_2D,
+            0,
+            0,
+            0,
+            m_width,
+            m_height,
+            m_format,
+            m_pixeltype,
+            m_buffer
+         );
+        glBindTexture(GL_TEXTURE_2D, 0);
+
+        pthread_mutex_unlock(&preview_mutex);
+    }
+
+    EXIT();
+}
+
+//内部処理で呼ばれる(この関数呼び出しはUIThreadではないのでgl関数が呼べない)
+void UVCPreview::UpdateBuffer(uvc_frame_t *frame)
+{
+	ENTER();
+
+    //バッファコピー(mutexは呼び出し元でするので不要)
+    if(m_buffer != NULL)
+    {
+        memcpy(m_buffer, frame->data, frame->actual_bytes);
+    }
+
+    EXIT();
 }

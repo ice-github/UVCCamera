@@ -2283,3 +2283,23 @@ int UVCCamera::getAnalogVideoLockState() {
 	}
 	RETURN(0, int);
 }
+
+int UVCCamera::SetPreviewTexture(unsigned int texture, int width, int height, int alignment, unsigned int format, unsigned int pixeltype)
+{
+	ENTER();
+	if (mPreview)
+	{
+		mPreview->SetTexture(texture, width, height, alignment, format, pixeltype);
+	}
+	RETURN(0, int);
+}
+
+int UVCCamera::UpdatePreviewTexture()
+{
+	ENTER();
+	if (mPreview)
+	{
+		mPreview->UpdateTexture();
+	}
+	RETURN(0, int);
+}
